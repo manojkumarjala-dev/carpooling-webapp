@@ -12,7 +12,7 @@ const formSchema = z.object({
   password: z.string().min(8, { message: "Password should contain min 8 characters" })
 })
 
-export function ProfileForm() {
+export function Register() {
   const router = useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
@@ -95,4 +95,4 @@ export function ProfileForm() {
   )
 }
 
-export default ProfileForm
+export default Register
