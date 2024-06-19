@@ -9,10 +9,11 @@ export const POST = auth(async function POST(req) {
   await connect();
 
   if (req.method === 'POST') {
-    const { email, startLocation, endLocation, date, time, availableSeats, notes } =await req.json();
+    const { startLocation, endLocation, date, time, availableSeats, notes } =await req.json();
 
     try {
-      const user = await User.findOne(email);
+     const email = req.auth?.user?.email
+      const user = await User.findOne({email:email});
       if (!user) {
         return new NextResponse("User not found", {
             status: 404

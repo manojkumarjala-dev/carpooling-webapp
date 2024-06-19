@@ -12,7 +12,7 @@ const formSchema = z.object({
   password: z.string().min(8, { message: "Password should contain min 8 characters" })
 })
 
-export function Register() {
+function Register() {
   const router = useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
@@ -78,7 +78,7 @@ export function Register() {
           </div>
           <div className='flex items-center'>
             <input type="checkbox" id="show-password" onClick={() => {
-              const passwordInput = document.getElementById('toggler');
+              const passwordInput = document.getElementById('toggler') as HTMLInputElement;
               if (passwordInput) {
                 passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
               }
