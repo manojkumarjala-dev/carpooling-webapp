@@ -19,7 +19,7 @@ export const POST = auth(async function POST(req) {
             status: 404
           });
       }
-
+      console.log(date)
       const carpoolPost = new CarpoolPost({
         user: user._id,
         startLocation,
