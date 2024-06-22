@@ -47,7 +47,18 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <div>
       <h1>My Post: {params.slug}</h1>
-      <pre>{JSON.stringify(post, null, 2)}</pre>
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      {post && <div className="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
+        <h2 className="text-black text-2xl font-bold mb-4">Trip Details</h2>
+        <p className="mb-2 text-black"><span className="font-semibold text-black">From:</span> {post.posting.startLocation}</p>
+        <p className="mb-2 text-black"><span className="font-semibold text-black">To:</span> {post.posting.endLocation}</p>
+        <p className="mb-2 text-black"><span className="font-semibold text-black">Date:</span> {new Date(post.posting.date).toLocaleDateString()}</p>
+        <p className="mb-2 text-black"><span className="font-semibold text-black">Time:</span> {post.posting.time}</p>
+        <p className="mb-2 text-black"><span className="font-semibold text-black">Available Seats:</span> {post.posting.availableSeats}</p>
+        <p className="mb-2 text-black"><span className="font-semibold text-black">Occupied Seats:</span> {post.posting.occupiedSeats}</p>
+        <p className="mb-2 text-black"><span className="font-semibold text-black">Notes:</span> {post.posting.notes}</p>
+      </div>}
+    </div>
     </div>
   );
 }
