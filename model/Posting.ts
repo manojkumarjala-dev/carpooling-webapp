@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+import { CarpoolPost_type } from '@/types/types';
 
 const { Schema } = mongoose;
 
-const carpoolPostSchema = new Schema({
+const carpoolPostSchema = new Schema<CarpoolPost_type>({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -48,4 +49,4 @@ const carpoolPostSchema = new Schema({
   },
 });
 
-export default mongoose.models.CarpoolPost || mongoose.model("CarpoolPost",carpoolPostSchema);
+export default mongoose.models.CarpoolPost || mongoose.model<CarpoolPost_type>("CarpoolPost",carpoolPostSchema);

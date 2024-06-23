@@ -4,7 +4,6 @@ import CarpoolPost from '@/model/Posting';
 import User from '@/model/User';
 import { NextResponse } from 'next/server';
 import { auth } from '@/app/auth';
-
 export const POST = auth(async function POST(req) {
   await connect();
   if(!req.auth){
@@ -12,8 +11,9 @@ export const POST = auth(async function POST(req) {
         status: 404
       });
   }
-    const { postId, email } = await req.json();
-
+    const { postId } = await req.json();
+    console.log(postId)
+    const email = req.auth.user?.email
     try {
       const user = await User.findOne({email: email});
       if (!user) {
@@ -28,6 +28,13 @@ export const POST = auth(async function POST(req) {
             status: 404
           });
       }
+      console.log(carpoolPost.user)
+      console.log(user._id)
+      if(carpoolPost.user.equals(user._id)){
+        return new NextResponse("Bad Request", {
+          status: 400
+        });
+      }
 
       if (carpoolPost.occupiedSeats >= carpoolPost.availableSeats) {
         return new NextResponse("No available seats", {
@@ -35,6 +42,16 @@ export const POST = auth(async function POST(req) {
           });
       }
 
+      if(carpoolPost.user === user._id){
+        return new NextResponse("You cannot make the request", {
+          status: 400
+        });
+      }
+      if(carpoolPost.occupants.includes(user._id)){
+        return new NextResponse("Already booked", {
+          status: 400
+        });
+      }
       carpoolPost.occupiedSeats += 1;
       carpoolPost.occupants.push(user._id);
 
