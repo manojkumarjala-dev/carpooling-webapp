@@ -46,5 +46,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-});
+  callbacks:{
+    async session({ session, token }) {
+      console.log({ sessionToken: token });
+      console.log({ session: session });
+
+      if (token.id && session.user) {
+        session.user.id = token.id as string;
+      }
+      console.log({ session: session });
+      return session;
+    },
+  },
+}
+);
 
