@@ -15,7 +15,7 @@ export async function GET(req: Request ,{ params }: { params: { id: string } }) 
           });
       }
 
-      return new NextResponse(JSON.stringify({ username:user.username, email:user.email }),{
+      return new NextResponse(JSON.stringify({ username:user.username, email:user.email, id:user._id }),{
         status:200,
     })
 

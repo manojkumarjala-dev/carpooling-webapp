@@ -4,6 +4,7 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/lib/db";
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
+import { use } from "react";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   session: {
@@ -23,16 +24,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!email || !password) {
             return null;
           }
-
+          console.log("OCCURING")
           const user = await (await clientPromise)
             .db('test')
             .collection("users")
             .findOne({ email: email });
-
+          console.log(user)
           if (user && password) {
             const isPasswordCorrect = await bcrypt.compare(password, user.password);
             if (isPasswordCorrect) {
-              return user as User;
+              return {
+                id: user._id.toString(),
+                email: user.email,
+                name:user.username,
+                image:null
+              };
             } else {
               return null
             }
@@ -47,14 +53,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks:{
+
+    async jwt({ token, user }) {
+      // Include user ID in the token if it's not already present
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
     async session({ session, token }) {
-      console.log({ sessionToken: token });
-      console.log({ session: session });
 
       if (token.id && session.user) {
         session.user.id = token.id as string;
       }
-      console.log({ session: session });
       return session;
     },
   },

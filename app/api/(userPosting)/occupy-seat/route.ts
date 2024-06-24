@@ -53,6 +53,7 @@ export const POST = auth(async function POST(req) {
         });
       }
       carpoolPost.occupiedSeats += 1;
+      carpoolPost.availableSeats -=1;
       carpoolPost.occupants.push(user._id);
 
       await carpoolPost.save();
