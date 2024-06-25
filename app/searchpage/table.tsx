@@ -78,7 +78,20 @@ const Table: React.FC<TableProps> = ({data}) => {
         getCoreRowModel:getCoreRowModel()
       });
   return (
-    <div className='w-full pt-12'>
+    <div>
+    <div className='w-full sm:hidden flex flex-col justify-center items-center pt-2'>
+    <h3 className='text-xl font-semibold mb-2'>Available Trips</h3>
+    {data.map(trip => (
+        <div key={trip._id.toString()} className='p-4 border border-gray-300 rounded-xl mb-4 w-3/4'>
+          
+          <p><strong>End Location:</strong> {trip.endLocation}</p>
+          <p><strong>Date:</strong> {new Date(trip.date).toLocaleDateString()}</p>
+          <p><strong>Available Seats:</strong> {trip.availableSeats}</p>
+          <a href={`/posting/${trip._id}`} target='_blank' className='text-blue-500 underline'>View posting</a>
+        </div>
+      ))}
+    </div>
+    <div className='w-full pt-12 hidden sm:flex'>
 
       <table className='w-full'>
           <thead>
@@ -87,7 +100,7 @@ const Table: React.FC<TableProps> = ({data}) => {
                 (headerGroup)=>(
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map(header => (
-                      <th key={header.id} className='text-black'>
+                      <th key={header.id} className='text-black '>
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -120,6 +133,7 @@ const Table: React.FC<TableProps> = ({data}) => {
             }
           </tbody>
       </table>
+    </div>
     </div>
 
   )

@@ -32,7 +32,7 @@ export default async function RootLayout({
           fontSans.variable
         )}>
           <NavBar></NavBar>
-          <main className="min-h-screen mt-50">
+          <main className="min-h-screen mt-50 bg-gray-100">
             {children}
           </main>
           </body>

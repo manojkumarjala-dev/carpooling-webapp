@@ -68,6 +68,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      console.log({ url: url });
+      console.log({ baseUrl: baseUrl });
+    
+      // Check if the URL is the sign-in callback URL
+      if (url.startsWith("/")) {
+        // After successful sign-in, redirect to /dashboard
+        if (url.includes("/callback")) {
+          return `${baseUrl}/dashboard`;
+        }
+        return `${baseUrl}${url}`;
+      } 
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) {
+        // After successful sign-in, redirect to /dashboard
+        if (url.includes("/callback")) {
+          return `${baseUrl}/dashboard`;
+        }
+        return url;
+      }
+    
+      return baseUrl;
+    }
+    
   },
 }
 );

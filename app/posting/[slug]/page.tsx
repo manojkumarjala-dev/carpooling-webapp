@@ -119,7 +119,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     }
 
     fetchData();
-  }, [params,isPresent,seatloading]);
+  }, [params,isPresent,seatloading,userId]);
 
   if (loading) {
     return <div>Loading...</div>;

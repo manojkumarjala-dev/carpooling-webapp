@@ -21,17 +21,38 @@ function LeftNav(props:Props) {
     ];
 
     return (
-        <div className='min-h-screen w-1/4 bg-gray-800 flex flex-col justify-between'>
-            <div className='flex flex-col gap-2 mt-40'>
+        <div className='pt-2'>
+            <div className=' w-full justify-around flex sm:hidden'>
                 {
                     options.map((option, index) => {
                         const isActive = option.id === currentTab;
-                        const buttonClass = `p-2 ${isActive ? 'bg-gray-500 ' : ''}`;
+                        const buttonClass = `text-black p-2 rounded-3xl ${isActive ? 'bg-gray-200 ' : ''}`;
                         return (
                             <button 
                                 key={index} 
                                 className={buttonClass}
                                 onClick={()=>{setCurrentTab(option.id);props.setTab(option.id)}}
+                                
+                            >
+                                {option.option}
+                            </button>
+                        );
+                    })
+                }
+            </div>
+
+        <div className='min-h-screen w-1/4 bg-gray-800  flex-col justify-between hidden sm:flex'>
+            <div className='flex flex-col gap-2 mt-40'>
+                {
+                    options.map((option, index) => {
+                        const isActive = option.id === currentTab;
+                        const buttonClass = `text-white p-2 ${isActive ? 'bg-gray-500 ' : ''}`;
+                        return (
+                            <button 
+                                key={index} 
+                                className={buttonClass}
+                                onClick={()=>{setCurrentTab(option.id);props.setTab(option.id)}}
+                                
                             >
                                 {option.option}
                             </button>
@@ -42,6 +63,7 @@ function LeftNav(props:Props) {
             <div className='text-center mb-8'>
                 <button>Log Out</button>
             </div>
+        </div>
         </div>
     );
 }
