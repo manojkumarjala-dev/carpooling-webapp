@@ -21,7 +21,7 @@ function LeftNav(props:Props) {
     ];
 
     return (
-        <div className='pt-2'>
+        <div className='pt-2 sm:pt-0 sm:w-1/4 w-full'>
             <div className=' w-full justify-around flex sm:hidden'>
                 {
                     options.map((option, index) => {
@@ -41,7 +41,7 @@ function LeftNav(props:Props) {
                 }
             </div>
 
-        <div className='min-h-screen w-1/4 bg-gray-800  flex-col justify-between hidden sm:flex'>
+        <div className='min-h-screen bg-gray-800 flex-col justify-between hidden sm:flex'>
             <div className='flex flex-col gap-2 mt-40'>
                 {
                     options.map((option, index) => {

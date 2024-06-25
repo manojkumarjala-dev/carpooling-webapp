@@ -64,7 +64,7 @@ export default function Createpost(props: CreatePostProps) {
   }
 
   return (
-    <div className='flex items-center justify-center h-screen bg-grey-900 w-3/4'>
+    <div className='flex justify-center min-h-screen bg-grey-900 sm:w-3/4 sm:py-12 pt-4'>
       <div className='w-full max-w-md px-8 py-8 mx-auto bg-slate-800 rounded-lg shadow-md'>
         <h2 className='mb-6 text-2xl font-bold text-center text-gray-200'>Create-post</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
