@@ -11,6 +11,9 @@ const config = {
 	],
   prefix: "",
   theme: {
+    backgroundImage:{
+      'hero-pattern': "url('/logo.png')",
+    },
     container: {
       center: true,
       padding: "2rem",

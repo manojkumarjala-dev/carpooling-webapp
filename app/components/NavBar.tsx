@@ -1,9 +1,14 @@
+'use client'
 import Link from "next/link"
 import Image from "next/image"
 import { NAV_LINKS } from "@/constants"
 import Button from "./Button"
+import { useState } from "react"
 function NavBar() {
+    const [menuSelected,setMenuSelected] = useState(false)
   return (
+    <div className="flex flex-col w-full">
+
     <nav className="border pb-2 relative z-30 shadow-lg flex justify-around">
         <Link href='/'>
             <Image src='/logoname.svg' width='250' height='40' alt='logoname'></Image>
@@ -17,13 +22,26 @@ function NavBar() {
             }
         </ul>
         <div className="flex sm:hidden mt-2">
+        <button onClick={()=>setMenuSelected(prev=>!prev)}>
+            <Image src='/menu.svg' width={28} height={28} alt="menu" ></Image>
+        </button>
+        </div>
 
-        <Image src='/menu.svg' width={28} height={28} alt="menu" ></Image>
-        </div>
-        <div className="hidden sm:flex">
-        <Button title="Login" type="button" variant="btn_black" ></Button>
-        </div>
+        <Link className="hidden sm:flex" href={'/api/auth/signin'}>
+        <button className={`rounded-2xl px-4 mt-2 w-28 text-white bg-black`}>Login</button> 
+        </Link>
     </nav>
+        {menuSelected && <div className="absolute flex items-center justify-center sm:hidden opacity-80 w-full mt-12 transition">
+            <ul className="h-fulll gap-12 w-full ">
+                    {
+                        NAV_LINKS.map(heading => 
+                            <Link href={heading.href} key={heading.key} className="flex text-gray-500 justify-center pb-2 pt-4 hover:text-gray-900 shadow-md">
+                                {heading.label}
+                            </Link>)
+                    }
+            </ul>
+        </div>}
+    </div>
   )
 }
 
