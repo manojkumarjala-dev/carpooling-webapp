@@ -23,7 +23,7 @@ function Dashboard() {
 
   if (status === 'authenticated') {
     return (
-      <div className='sm:flex flex flex-col'>
+      <div className='sm:flex sm:flex-row flex flex-col'>
         <LeftNav setTab={setTab}></LeftNav>
         {
           tab === 'createPosting' && <Createpost setTab={setTab}></Createpost>
