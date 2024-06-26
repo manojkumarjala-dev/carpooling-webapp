@@ -17,20 +17,20 @@ export const POST = auth(async function POST(req) {
   try {
     const user = await User.findById(id);
     if (!user) {
-      return new NextResponse("User not found", {
+      return new NextResponse(JSON.stringify({ error:"User not found"}), {
         status: 404
       });
     }
 
     const carpoolPost = await CarpoolPost.findById(postId);
     if (!carpoolPost) {
-      return new NextResponse("Carpool post not found", {
+      return new NextResponse(JSON.stringify({ error:"Carpool post not found"}), {
         status: 404
       });
     }
 
     if (!carpoolPost.occupants.some((occupant: ObjectId) => occupant.toString() === id)) {
-      return new NextResponse("User is not an occupant", {
+      return new NextResponse(JSON.stringify({ error:"User is not an occupant"}), {
         status: 400
       });
     }
@@ -40,11 +40,11 @@ export const POST = auth(async function POST(req) {
     carpoolPost.availableSeats += 1;
 
     await carpoolPost.save();
-    return new NextResponse("Unbooking successful", {
+    return new NextResponse(JSON.stringify({ error:"Unbooking successful"}), {
       status: 200
     });
   } catch (error:any) {
-    return new NextResponse(error.toString(), {
+    return new NextResponse(JSON.stringify({error: error.toString()}), {
       status: 500
     });
   }

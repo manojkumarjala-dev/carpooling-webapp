@@ -10,7 +10,7 @@ export async function GET(req: Request ,{ params }: { params: { id: string } }) 
     try {
       const user = await User.findById(slug);
       if (!user) {
-        return new NextResponse("User not found", {
+        return new NextResponse(JSON.stringify({ error:"User not found"}), {
             status: 404
           });
       }
@@ -20,7 +20,7 @@ export async function GET(req: Request ,{ params }: { params: { id: string } }) 
     })
 
     } catch (error: any) {
-        return new NextResponse(error.toString(), {
+        return new NextResponse(JSON.stringify({error: error.toString()}), {
             status: 500
           });
     }

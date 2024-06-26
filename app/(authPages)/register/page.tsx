@@ -1,10 +1,11 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 const formSchema = z.object({
   username: z.string().min(6, { message: "Enter valid Username" }),
@@ -13,6 +14,7 @@ const formSchema = z.object({
 })
 
 function Register() {
+  const [e, setError] = useState(null);
   const router = useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(formSchema),
@@ -24,6 +26,8 @@ function Register() {
   })
 
   async function onSubmit(values : z.infer<typeof formSchema>) {
+   
+
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
@@ -35,13 +39,25 @@ function Register() {
     if (response.ok) {
       router.push('/api/auth/signin')
     } else {
+      const error = await response.json()
+      setError(error.error)
       console.log(values)
+      console.log(error)
       console.error('Failed to register user')
+      setTimeout(() => {
+        setError(null)
+      }, 3000);
     }
   }
 
   return (
-    <div className='flex items-center justify-center h-screen bg-zinc-200'>
+    <div className=''>
+      {
+        e && <div className="absolute p-4 w-full">
+        <div className="border border-red-400 py-4 flex bg-white gap-2 rounded-xl w-auto px-8 text-bold"><Image src='/error.svg' width={20} height={20} alt="error"></Image><span className="text-red-600 font-bold">Error</span>:<p className="font-bold"> {e}</p></div>
+        </div>
+      }
+    <div className='flex items-center justify-center h-screen bg-zinc-200'> 
       <div className='w-full max-w-md px-8 py-8 mx-auto bg-white rounded-lg shadow-md'>
         <h2 className='mb-6 text-2xl font-bold text-center text-gray-800'>Register</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -91,6 +107,7 @@ function Register() {
         </form>
         <p className='pt-4 text-sm text-center text-gray-800'>Already have an account? <Link href='/login' className='font-bold text-gray-900 hover:text-blue-500'>Sign In</Link></p>
       </div>
+    </div>
     </div>
   )
 }

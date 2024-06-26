@@ -1,4 +1,3 @@
-// pages/api/occupySeat.js
 import connect from '@/lib/mongodb';
 import CarpoolPost from '@/model/Posting';
 import { NextResponse } from 'next/server';
@@ -6,12 +5,19 @@ import { auth } from '@/app/auth';
 
 export async function GET(req: Request ,{ params }: { params: { slug: string } }) {
   await connect();
+  
+  if (!params.slug) {
+    return new NextResponse(JSON.stringify({ Bad_Request: 'Missing slug parameter' }), {
+      status: 400
+    });
+  }
+
   const slug = params.slug
 
     try {
       const posting = await CarpoolPost.findById(slug);
       if (!posting) {
-        return new NextResponse("Posting not found", {
+        return new NextResponse(JSON.stringify({ error: 'Posting not found' }), {
             status: 404
           });
       }
@@ -21,7 +27,7 @@ export async function GET(req: Request ,{ params }: { params: { slug: string } }
     })
 
     } catch (error: any) {
-        return new NextResponse(error.toString(), {
+        return new NextResponse(JSON.stringify({error: error.toString()}), {
             status: 500
           });
     }

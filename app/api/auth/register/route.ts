@@ -9,13 +9,25 @@ const SECRET_KEY = process.env.AUTH_SECRET;
 
 export const POST = async (req: Request) => {
   const { email, password, username } = await req.json();
+  if(!email || !password || !username){
+    return new NextResponse(JSON.stringify({ error:"All Fields Required"}), {
+      status: 400
+    });
+  }
 
   try {
     await connect();
     // Check if the user already exists
     const user = await User.findOne({ email });
+    console.log(user)
     if (user) {
-      return new NextResponse("User already exists", {
+      return new NextResponse(JSON.stringify({ error:"Email already exists"}), {
+        status: 400
+      });
+    }
+    const userbyUsername = await User.findOne({username});
+    if (userbyUsername) {
+      return new NextResponse(JSON.stringify({ error:"Username taken"}), {
         status: 400
       });
     }
@@ -32,19 +44,19 @@ export const POST = async (req: Request) => {
 
     try {
         await newUser.save();
-      const response = new NextResponse("User Registration successful", {
-        status: 200
+      const response = new NextResponse(JSON.stringify({ success:"User Registration successful"}), {
+        status: 200,
       });
-      return response;
+      return response
 
     } catch (error: any) {
-      return new NextResponse(error.toString(), {
+      return new NextResponse(JSON.stringify({error: error.toString()}), {
         status: 500
       });
     }
 
   } catch (error: any) {
-    return new NextResponse(error.toString(), {
+    return new NextResponse(JSON.stringify({error: error.toString()}), {
       status: 500
     });
   }

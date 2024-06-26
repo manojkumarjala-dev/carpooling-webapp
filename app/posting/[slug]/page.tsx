@@ -76,7 +76,9 @@ export default function Page({ params }: { params: { slug: string } }) {
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          const error = await response.json()
+          setError(error.error)
+          throw new Error('Something went wrong')
         }
 
         const data = await response.json();
@@ -93,6 +95,8 @@ export default function Page({ params }: { params: { slug: string } }) {
           }
         });
         if (!userResponse.ok) {
+          const error = await response.json()
+          setError(error.error)
           throw new Error(`HTTP error! Status: ${userResponse.status}`);
         }
         const userData = await userResponse.json();
@@ -111,8 +115,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         setOccupants(occupantData);
 
         
-      } catch (error) {
-        console.error(error);
+      } catch (error : any) {
+        console.error(error.message);
       } finally {
         setLoading(false);
       }
@@ -126,7 +130,10 @@ export default function Page({ params }: { params: { slug: string } }) {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="flex justify-center sm:justify-end p-4">
+      <div className="border border-red-400 py-4 flex bg-white gap-2 rounded-xl w-auto px-8 text-bold"><Image src='/error.svg' width={20} height={20} alt="error"></Image><span className="text-red-600 font-bold">Error</span>:<p className="font-bold"> {error}</p></div>
+      </div>
+      
   }
 
   const unbookSeat = async () => {
@@ -139,6 +146,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         body: JSON.stringify({ postId: params.slug }),
       });
       if (!response.ok) {
+        const error = await response.json()
+        setError(error.error)
         throw new Error(`Something went wrong! Status: ${response.status}`);
       }
       setIsPreset(false);
@@ -150,6 +159,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div>
+      <div className="absolute w-30 h-10 border border-red-400">{error}</div>
       <div className="flex min-h-screen w-full bg-gray-100 sm:p-16 sm:px-48">
         {post &&
           <div className="bg-white shadow-md rounded-lg p-6 w-full">
