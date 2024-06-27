@@ -48,5 +48,6 @@ const carpoolPostSchema = new Schema<CarpoolPost_type>({
     default: Date.now,
   },
 });
+carpoolPostSchema.index({date:1},{expireAfterSeconds:1})
 
 export default mongoose.models.CarpoolPost || mongoose.model<CarpoolPost_type>("CarpoolPost",carpoolPostSchema);

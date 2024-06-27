@@ -1,54 +1,57 @@
-import NextAuth, { User } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth, {  CredentialsSignin } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/lib/db";
 import bcrypt from 'bcryptjs';
+import { compare } from "bcryptjs";
 import { NextResponse } from 'next/server';
 import { use } from "react";
+import connect from "@/lib/mongodb";
+import User from "@/model/User";
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: "jwt",
   },
   providers: [
-    CredentialsProvider({
-      type: "credentials",
+    Credentials({
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        try {
+        
             const email = credentials?.email as string;
             const password = credentials?.password as string;
+            console.log(email,password)
           if (!email || !password) {
-            return null;
+            throw new CredentialsSignin("Please provide both email & password");
           }
           console.log("OCCURING")
-          const user = await (await clientPromise)
-            .db('test')
-            .collection("users")
-            .findOne({ email: email });
-          console.log(user)
-          if (user && password) {
-            const isPasswordCorrect = await bcrypt.compare(password, user.password);
-            if (isPasswordCorrect) {
-              return {
-                id: user._id.toString(),
-                email: user.email,
-                name:user.username,
-                image:null
-              };
-            } else {
-              return null
-            }
-          } else {
-            return null
-          }
-        } catch (error) {
-          console.error(error);
-          return null
+          await connect()
+          const user = await User.findOne({ email }).select("+password");
+
+        if (!user) {
+          throw new Error("Invalid email or password");
         }
+
+        if (!user.password) {
+          throw new Error("Invalid email or password");
+        }
+
+        const isMatched = await compare(password, user.password);
+
+        if (!isMatched) {
+          throw new Error("Password did not matched");
+        }
+
+        const userData = {        
+          email: user.email,
+          id: user._id,
+        };
+
+        return userData;
+        
       },
     }),
   ],
@@ -68,31 +71,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
-      console.log({ url: url });
-      console.log({ baseUrl: baseUrl });
-    
-      // Check if the URL is the sign-in callback URL
-      if (url.startsWith("/")) {
-        // After successful sign-in, redirect to /dashboard
-        if (url.includes("/callback")) {
-          return `${baseUrl}/dashboard`;
-        }
-        return `${baseUrl}${url}`;
-      } 
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) {
-        // After successful sign-in, redirect to /dashboard
-        if (url.includes("/callback")) {
-          return `${baseUrl}/dashboard`;
-        }
-        return url;
-      }
-    
-      return baseUrl;
-    }
     
   },
+  pages: {
+    signIn: '/signin'
+  }
 }
 );
 
