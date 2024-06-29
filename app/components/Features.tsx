@@ -3,7 +3,7 @@ import { FEATURES } from '@/constants'
 import Image from 'next/image'
 function Features() {
   return (
-    <section className='py-5 min-h-screen sm:min-h-[40vh]'>
+    <section className='py-5 min-h-[70vh] sm:min-h-[40vh]'>
       <div className='max-container padding-container relative w-full justify-end '>
         <h2 className='bold-32 lg:bold-52 '>Our Features</h2>
         <div className='flex flex-col sm:flex-row justify-around gap-8 pt-8'>

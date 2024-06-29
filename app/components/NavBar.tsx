@@ -12,6 +12,11 @@ function NavBar() {
     <div className="flex flex-col w-full">
 
     <nav className="border pb-2 relative z-30 shadow-lg flex justify-around">
+    <div className="flex sm:hidden mt-2">
+        <button onClick={()=>setMenuSelected(prev=>!prev)}>
+            <Image src='/menu.svg' width={28} height={28} alt="menu" ></Image>
+        </button>
+        </div>
         <Link href='/'>
             <Image src='/logoname.svg' width='250' height='40' alt='logoname'></Image>
         </Link>
@@ -22,15 +27,16 @@ function NavBar() {
                         {heading.label}
                     </Link>)
             }
+            && 
         </ul>}
-        <div className="flex sm:hidden mt-2">
-        <button onClick={()=>setMenuSelected(prev=>!prev)}>
-            <Image src='/menu.svg' width={28} height={28} alt="menu" ></Image>
-        </button>
-        </div>
+        {
+            session && <Link className="sm:hidden" href={'/api/auth/signout'}>
+            <button className={`rounded-2xl px-2 mt-2 w-28 py-2 text-white bg-black`}>Sign out</button> 
+            </Link>
+        }
 
         {!session && <Link className="hidden sm:flex" href={'/api/auth/signin'}>
-        <button className={`rounded-2xl px-4 mt-2 w-28 text-white bg-black`}>Login</button> 
+        <button className={`rounded-2xl px-2 mt-2 w-24 text-white bg-black`}>Login</button> 
         </Link>}
         {
             session && <Link className="hidden sm:flex" href={'/api/auth/signout'}>

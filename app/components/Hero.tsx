@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 function Hero() {
   return (
     <section className='max-container pb-20  sm:bg-[url("/travel.png")] sm:bg-cover sm:bg-[top_10rem_left_16rem] border-red-900 max-container padding-container flex flex-col sm:flex sm:flex-row  sm:pb-80 sm:gap-60 '>
@@ -19,7 +20,9 @@ function Hero() {
       <p className=''>Join the CarHop Community. Save money, make friends, and reduce your carbon footprint<Image src='/carbon.svg' width={20} height={20} alt='carbon' className='inline'></Image>. CarHop connects you with fellow commuters for a smarter, greener way to travel. Hop in and experience the joy of shared rides today!
 </p>
      </div>
-
+     <Link className="sm:hidden pt-4" href={'/signin'}>
+        <button className={`rounded-2xl px-4 mt-2 w-28 py-2 text-white bg-black`}>Login</button> 
+        </Link>
      {/*LEFT */}
     </section>
   )
